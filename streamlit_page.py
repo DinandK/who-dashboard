@@ -250,6 +250,7 @@ if selected == "Model":
     country_color_map = {"India": "yellow", "China": "red"}  
     fig = px.scatter(INDCH, x='Year', y='Air_pollution', color='Country Name',  color_discrete_map = country_color_map,  height= 900)
     fig.update_traces(marker={'size': 15})
+    fig.update_layout(title='Verloop doden over de jaren heen', yaxis_title='Aantal doden')
     st.plotly_chart(fig, use_container_width=True)
 
     #vis 2
@@ -269,7 +270,7 @@ if selected == "Model":
     fig = px.scatter(IND, x='Year', y='Air_pollution', title= "Voorspelling aantal doden per jaar door air pollution in India", height = 900)
     fig.add_scatter(x=prediction['Year'], y=prediction['Air_pollution'])
     fig.update_traces(marker={'size': 15})
-    fig.update_layout(height = 900)
+    fig.update_layout(height = 900, yaxis_title='Aantal doden')
     # Show plot 
     st.plotly_chart(fig,use_container_width=True)
 
