@@ -152,7 +152,7 @@ if selected == "Landen vergelijken":
         #vis 2
         max_value = df_right.iat[0, 0]
         fig = plt.figure(figsize=(9,5))
-        sns.barplot(x='Jaar',y=max_value,data=selected_data_right,palette='viridis')
+        sns.barplot(x='Year',y=max_value,data=selected_data_right,palette='viridis')
         plt.xticks(rotation=90)
         plt.title("Aantal overleden aan het gevolg van " + max_value + " in " +options_right)
         plt.ylabel('Aantal doden')
