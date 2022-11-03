@@ -10,8 +10,11 @@ import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 import leafmap.foliumap as leafmap
 from statsmodels.formula.api import ols
+import random
 
-#Style
+
+
+#Style for pages
 st.set_page_config(
     page_title="Eindpresentatie VA",
     page_icon="🎓",
@@ -23,10 +26,11 @@ st.set_page_config(
 st.markdown("<h1 style='text-align: center; color: grey;'>🌎Dashboard WHO gevolg van overlijden🌎</h1>", unsafe_allow_html=True)
 
 #Create header
+
 st.markdown("<h4 style='text-align: center; color: grey;'>Visual Analytics eindopdracht gemaakt door: Maureen Dewki & Dinand Kruger</h4>", unsafe_allow_html=True)
 
 #Import datasets
-wereld = pd.read_csv('wereld.csv')
+wereld = pd.read_csv('wereld.csv', index_col=[0])
 alles = pd.read_csv('alles.csv', index_col=[0])
 india =pd.read_csv('india.csv', index_col=[0])
 
@@ -75,6 +79,15 @@ if selected == "Wereld":
     st.plotly_chart(fig,use_container_width=True)
     
     #vis 2
+    grouped_country_df = wereld.groupby('Country Name').mean()
+    total_deaths = grouped_country_df.drop('Year', axis=1).sum().transpose().sort_values(ascending=False)
+    total_deaths =  total_deaths.drop('Total Deaths')
+    fig = plt.figure(figsize=(20,7), dpi=50)
+    sns.barplot(y=total_deaths.index, x=total_deaths.values).set(title='Doodsoorzaken in de wereld')
+    plt.xlabel('Aantal doden in miljoenen')
+    st.write(fig)
+
+    #vis 3
     box = wereld[['High systolic blood pressure', 'Smoking', 'High fasting plasma glucose', 'Country Name', 'Year']]
     box = box[wereld['Country Name']=='World']
     fig = go.Figure()
