@@ -11,8 +11,7 @@ from streamlit_option_menu import option_menu
 import leafmap.foliumap as leafmap
 from statsmodels.formula.api import ols
 
-
-#Style for pages
+#Style
 st.set_page_config(
     page_title="Eindpresentatie VA",
     page_icon="🎓",
@@ -24,7 +23,6 @@ st.set_page_config(
 st.markdown("<h1 style='text-align: center; color: grey;'>🌎Dashboard WHO gevolg van overlijden🌎</h1>", unsafe_allow_html=True)
 
 #Create header
-
 st.markdown("<h4 style='text-align: center; color: grey;'>Visual Analytics eindopdracht gemaakt door: Maureen Dewki & Dinand Kruger</h4>", unsafe_allow_html=True)
 
 #Import datasets
@@ -91,7 +89,7 @@ if selected == "Landen vergelijken":
     col1, col2  = st.columns(2)
     #left side  
     with col1: 
-        options_left = st.selectbox('Selecteer het eerste land',alles['Country Name'].unique(), index=33)
+        options_left = st.selectbox('Selecteer het eerste land',alles['Country Name'].unique(), index=114)
         selected_data_left = alles[alles['Country Name']==options_left]
         risk_factors = [rf for rf in selected_data_left.columns if rf not in ['Country Name','Year', 'latitude', 'longitude','verhouding','Total Deaths', 'Inhabitants', 'Country Code' ]]
         average_deaths = []
@@ -135,49 +133,52 @@ if selected == "Landen vergelijken":
         st.write(fig) 
 
     with col2: #right side
-        options_right = st.selectbox('Selecteer het tweede land',alles['Country Name'].unique(), index = 40)        
-        selected_data_right = alles[alles['Country Name']==options_right]
-        risk_factors = [rf for rf in selected_data_right.columns if rf not in ['Country Name','Year', 'latitude', 'longitude','verhouding','Total Deaths', 'Inhabitants', 'Country Code' ]]
-        average_deaths = []
-        for rf in risk_factors:
-            average_deaths.append(selected_data_right[rf].mean())
-        df_right = pd.DataFrame(list(zip(risk_factors,average_deaths)),columns=['Risk Factor','Avg. Deaths']).sort_values(by='Avg. Deaths',ascending=False)    
-        #vis 1 bar
-        fig = plt.figure(figsize=(11,7))
-        sns.barplot(y='Risk Factor',x='Avg. Deaths',data=df_right)
-        plt.title('Gemiddeld aantal doden per risico factor in ' +options_right)
-        plt.xlabel('Gemiddeld aantal doden')
-        st.write(fig)
-        
-        #vis 2
-        max_value = df_right.iat[0, 0]
-        fig = plt.figure(figsize=(9,5))
-        sns.barplot(x='Year',y=max_value,data=selected_data_right,palette='viridis')
-        plt.xticks(rotation=90)
-        plt.title("Aantal overleden aan het gevolg van " + max_value + " in " +options_right)
-        plt.ylabel('Aantal doden')
-        st.write(fig)
+        options_right = st.selectbox('Selecteer het tweede land',alles['Country Name'].unique(), index = 33)     
+        if options_left == options_right:
+            st.error('Selecteer een ander land dat nog niet gekozen is!', icon="🚨")
+        else:   
+            selected_data_right = alles[alles['Country Name']==options_right]
+            risk_factors = [rf for rf in selected_data_right.columns if rf not in ['Country Name','Year', 'latitude', 'longitude','verhouding','Total Deaths', 'Inhabitants', 'Country Code' ]]
+            average_deaths = []
+            for rf in risk_factors:
+                average_deaths.append(selected_data_right[rf].mean())
+            df_right = pd.DataFrame(list(zip(risk_factors,average_deaths)),columns=['Risk Factor','Avg. Deaths']).sort_values(by='Avg. Deaths',ascending=False)    
+            #vis 1 bar
+            fig = plt.figure(figsize=(11,7))
+            sns.barplot(y='Risk Factor',x='Avg. Deaths',data=df_right)
+            plt.title('Gemiddeld aantal doden per risico factor in ' +options_right)
+            plt.xlabel('Gemiddeld aantal doden')
+            st.write(fig)
+            
+            #vis 2
+            max_value = df_right.iat[0, 0]
+            fig = plt.figure(figsize=(9,5))
+            sns.barplot(x='Year',y=max_value,data=selected_data_right,palette='viridis')
+            plt.xticks(rotation=90)
+            plt.title("Aantal overleden aan het gevolg van " + max_value + " in " +options_right)
+            plt.ylabel('Aantal doden')
+            st.write(fig)
 
-        #vis 3 pie
-        fig, ax = plt.subplots(figsize=(8,9))        
-        myexplode = [0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ax.pie(df_right['Avg. Deaths'][:10],labels=df_right['Risk Factor'][:10], autopct='%.1f%%', explode = myexplode, shadow = True)
-        ax.set_title('Verdeling % van '+options_right)
-        st.pyplot(fig)
+            #vis 3 pie
+            fig, ax = plt.subplots(figsize=(8,9))        
+            myexplode = [0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ax.pie(df_right['Avg. Deaths'][:10],labels=df_right['Risk Factor'][:10], autopct='%.1f%%', explode = myexplode, shadow = True)
+            ax.set_title('Verdeling % van '+options_right)
+            st.pyplot(fig)
 
-        #vis 4 top 3
-        lijn1 = df_right.iat[0, 0]
-        lijn2 = df_right.iat[1, 0]
-        lijn3 = df_right.iat[2, 0]
-        fig = plt.figure(figsize=(10,8))
-        plt.plot(selected_data_right.Year,selected_data_right[lijn1],label=lijn1)
-        plt.plot(selected_data_right.Year,selected_data_right[lijn2],label=lijn2)
-        plt.plot(selected_data_right.Year,selected_data_right[lijn3],label=lijn3)
-        plt.legend()
-        plt.xlabel('Jaar verloop')
-        plt.ylabel('Aantal doden')
-        plt.title('Aantal doden top 3 in '+options_right)
-        st.write(fig)                 
+            #vis 4 top 3
+            lijn1 = df_right.iat[0, 0]
+            lijn2 = df_right.iat[1, 0]
+            lijn3 = df_right.iat[2, 0]
+            fig = plt.figure(figsize=(10,8))
+            plt.plot(selected_data_right.Year,selected_data_right[lijn1],label=lijn1)
+            plt.plot(selected_data_right.Year,selected_data_right[lijn2],label=lijn2)
+            plt.plot(selected_data_right.Year,selected_data_right[lijn3],label=lijn3)
+            plt.legend()
+            plt.xlabel('Jaar verloop')
+            plt.ylabel('Aantal doden')
+            plt.title('Aantal doden top 3 in '+options_right)
+            st.write(fig)                 
 
 
 
@@ -273,6 +274,5 @@ if selected == "Model":
     fig.update_layout(height = 900, yaxis_title='Aantal doden')
     # Show plot 
     st.plotly_chart(fig,use_container_width=True)
-
 
 
