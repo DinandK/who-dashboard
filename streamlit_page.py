@@ -53,12 +53,6 @@ if selected == "Wereld":
     """
         <div style="text-align: center">
             
-            <a href="https://www.kaggle.com/datasets/vaishnavivenkatesan/world-population/download?datasetVersionNumber=1" target="_blank" class="button">Link naar wereldpopulatie data🔗</a>
-            </div>
-    """
-    """
-        <div style="text-align: center">
-            
             <a href="https://raw.githubusercontent.com/google/dspl/master/samples/google/canonical/countries.csv" target="_blank" class="button">Link naar coördinaten van landen🔗</a>
             </div>
     """
