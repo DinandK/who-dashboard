@@ -10,11 +10,8 @@ import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 import leafmap.foliumap as leafmap
 from statsmodels.formula.api import ols
-import random
 
-
-
-#Style for pages
+#Style
 st.set_page_config(
     page_title="Eindpresentatie VA",
     page_icon="🎓",
